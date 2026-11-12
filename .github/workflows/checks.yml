@@ -3,9 +3,9 @@ name: Health Data Quality Checks
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   check-data:
@@ -25,3 +25,14 @@ jobs:
 
       - name: Run data quality check
         run: python check_data.py
+
+  build-docker:
+    runs-on: ubuntu-latest
+    needs: check-data
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t health-data-checks:latest .
